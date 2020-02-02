@@ -14,8 +14,8 @@ function nextTurn(){
 }
 
 let scores = {
-    'X': 10,
-    'O': -10,
+    'X': 100,
+    'O': -100,
     'tie':0
 }
 
@@ -96,19 +96,376 @@ function minimax(board, depth, maximizingPlayer, alpha, beta){
 
 function heuristic(){
 
-    let evel_two_row = 0;
-    let eval_3_row = 0;
-    let eval_4_row = 0;
-    //check the two cell 
+    let score = 0;
+    let winner = null;
+
+    //horizontally wins
     for(let i = 0; i < 16; i++){
-        if(equals2(board[i][0], board[[i][0]])){
-            eval_two_row++;
+        if(equals4(board[i][0], board[i][1], board[i][2], board[i][3])){
+            winner = board[i][0];
+            if(winner == ai){
+                return 100;
+            } else{
+                return -100;
+            }
+        }
+    }
+    //Vertical wins
+    for(let i = 0; i < 16; i = i + 4){
+        for(let j = 0; j < 4; j++){
+            if(equals4(board[i][j], board[i + 1][j], board[i + 2][j], board[i + 3][j])){
+                winner = board[i][j];
+                if(winner == ai){
+                    return 100;
+                }else {
+                    return -100;
+                }
+            }
         }
     }
     
+
+    //DIAGONAL
+    for(let i = 0 ; i < 16; i = i + 4){
+        if(equals4(board[i][0], board[i + 1][1], board[i + 2][2], board[i + 3][3]) && i + 4 < 16){
+            winner = board[i][0];
+            if(winner == ai){
+                return 100;
+            }else {
+                return -100;
+            }
+        }
+    }
+
+    for(let i = 0 ; i < 16; i = i + 4){
+        if(equals4(board[i][3], board[i + 1][2], board[i + 2][1], board[i + 3][0]) && i + 4 < 16){
+            winner = board[i][3];
+            if(winner == ai){
+                return 100;
+            }else {
+                return -100;
+            }
+        }
+    }
+
+    //3D vertical
+    for(let i = 0; i < 4; i++){
+        for(let j = 0; j < 4; j++){
+            if(equals4(board[i][j], board[i + 4][j], board[i + 8][j], board[i + 12][j])){
+                winner = board[i][j];
+                if(winner == ai){
+                    return 100;
+                }else {
+                    return -100;
+                }
+            }
+        }
+    }
+    if(equals4(board[0][0], board[5][1], board[10][2], board[15][3])){
+        winner = board[0][0];
+        if(winner == ai){
+            return 100;
+        }else {
+            return -100;
+        }
+    }
+
+    if(equals4(board[0][3], board[5][2], board[10][1], board[15][0])){
+        winner = board[0][3];
+        if(winner == ai){
+            return 100;
+        }else {
+            return -100;
+        }
+    }
+    
+    if(equals4(board[3][0], board[6][1], board[9][2], board[12][3])){
+        winner = board[3][0];
+        if(winner == ai){
+            return 100;
+        }else {
+            return -100;
+        }
+        
+    }
+
+    if(equals4(board[3][3], board[6][2], board[9][1], board[12][0])){
+        winner = board[3][3];
+        if(winner == ai){
+            return 100;
+        }else {
+            return -100;
+        }      
+    }
+
+    for(let i = 0; i < 4; i++){
+        if(equals4(board[0][i], board[5][i], board[10][i], board[15][i])){
+            winner = board[0][i];
+            if(winner == ai){
+                return 100;
+            }else {
+                return -100;
+            }      
+        }
+    }
+
+    for(let i = 0; i < 4; i++){
+        if(equals4(board[3][i], board[6][i], board[9][i], board[12][i])){
+            winner = board[3][i];
+            if(winner == ai){
+                return 100;
+            }else {
+                return -100;
+            }      
+            
+        }
+    }
+
+    //NOW THE FUN BEGINS:(((
     
 
+    //*number of two cell next to eachother horizontally in every 4*4
+    for(let i = 0; i < 16; i++){
+        if(equals2(board[i][0], board[i][1]) && board[i][2] == ''){
+            winner = board[i][0];
+            if(winner == ai){
+                score += 5;
+            }else {
+                score -= 5;
+            }  
+        }
+
+        if(equals2(board[i][1], board[i][2]) && board[i][0] == '' && board[i][3] == ''){
+            winner = board[i][1];
+            if(winner == ai){
+                score += 5;
+            }else {
+                score -= 5;
+            }  
+        }
+        if(equals2(board[i][2], board[i][3]) && board[i][1] == ''){
+            winner = board[i][2];
+            if(winner == ai){
+                score += 5;
+            }else {
+                score -= 5;
+            }  
+        }
+
+    }
+
+    //*number of two cell next to eachother vertically in every 4*4
+    for(let i = 0; i + 4 < 16; i = i + 4){
+        for(let j = 0; j < 4; j++){
+
+                if(equals2(board[i][j], board[i+1][j]) && board[i+2][j] ==''){
+                    winner = board[i][j];
+                    if(winner == ai){
+                        score += 5;
+                    }else {
+                        score -= 5;
+                    }  
+                }
+    
+                if(equals2(board[i + 1][j], board[i + 2][j]) && board[i][j] =='' && board[i + 3][j] == ''){
+                    winner = board[i+1][j];
+                    if(winner == ai){
+                        score += 5;
+                    }else {
+                        score -= 5;
+                    }  
+                }   
+    
+                if(equals2(board[i + 2][j], board[i + 3][j]) && board[i + 1][j] == ''){
+                    winner = board[i+2][j];
+                    if(winner == ai){
+                        score += 5;
+                    }else {
+                        score -= 5;
+                    }  
+                }
+
+            }
+        }
+
+    //*number of two cell next to eachother diagonally in every 4*4
+    for(let i = 0; i + 4 < 16; i = i +4){
+        if(equals2(board[i][0], board[i+1][1]) && board[i+2][2] == ''){
+            winner = board[i][0];
+            if(winner == ai){
+                score += 5;
+            }else {
+                score -= 5;
+            }  
+        }   
+
+        if(equals2(board[i + 1][1], board[i + 2][2]) && board[i][0] == '' && board[i + 3][3] == ''){
+            winner = board[i+1][1];
+            if(winner == ai){
+                score += 5;
+            }else {
+                score -= 5;
+            }  
+        }
+
+        if(equals2(board[i+2][2], board[i+3][3]) && board[i+1][1] == ''){
+            winner = board[i+2][2];
+            if(winner == ai){
+                score += 5;
+            }else {
+                score -= 5;
+            }  
+        }
+    }
+
+    //*number of two cell next to  eachother vertically in 3D view
+    for(let i = 0; i < 4; i++){
+        for(let j = 0; j < 4; j++){
+            if(equals2(board[i][j], board[i+4][j]) && board[i+8][j] ==''){
+                winner = board[i][j];
+                if(winner == ai){
+                    score += 5;
+                }else {
+                    score -= 5;
+                } 
+            }
+
+            if(equals2(board[i+4][j], board[i+8][j]) && board[i][j] =='' && board[i+12][j]){
+                winner = board[i+4][j];
+                if(winner == ai){
+                    score += 5;
+                }else {
+                    score -= 5;
+                } 
+            }
+
+            if(equals2(board[i+8][j], board[i+12][j]) && board[i+4][j] ==''){
+                winner = board[i+8][j];
+                if(winner == ai){
+                    score += 5;
+                }else {
+                    score -= 5;
+                } 
+            }
+        }
+    }
+
+    //*number of two cell next to eachother diagonally in 3D view
+
+    //*FIRST ONE
+    if(equals2(board[0][0], board[5][1]) && board[10][2] ==''){
+        winner = board[0][0];
+        if(winner == ai){
+            score += 5;
+        }else {
+            score -= 5;
+        } 
+    }
+
+    if(equals2(board[5][1], board[10][2]) && board[0][0] == '' && board[15][3] ==''){
+        winner = board[5][1];
+        if(winner == ai){
+            score += 5;
+        }else {
+            score -= 5;
+        }
+    }
+
+    if(equals2(board[10][2], board[15][3]) && board[5][1] == ''){
+        winner = board[10][2];
+        if(winner == ai){
+            score += 5;
+        }else {
+            score -= 5;
+        }
+    }
+
+    //*SECOND ONE
+    if(equals2(board[0][3], board[5][2]) && board[10][1] ==''){
+        winner = board[0][3];
+        if(winner == ai){
+            score += 5;
+        }else {
+            score -= 5;
+        } 
+    }
+
+    if(equals2(board[5][2], board[10][1]) && board[0][3] == '' && board[15][0] ==''){
+        winner = board[5][2];
+        if(winner == ai){
+            score += 5;
+        }else {
+            score -= 5;
+        }
+    }
+
+    if(equals2(board[10][1], board[15][0]) && board[5][2] == ''){
+        winner = board[10][1];
+        if(winner == ai){
+            score += 5;
+        }else {
+            score -= 5;
+        }
+    }
+
+    //*third one
+    if(equals2(board[3][0], board[6][1]) && board[9][2] ==''){
+        winner = board[3][0];
+        if(winner == ai){
+            score += 5;
+        }else {
+            score -= 5;
+        } 
+    }
+
+    if(equals2(board[6][1], board[9][2]) && board[3][0] == '' && board[12][3] ==''){
+        winner = board[6][1];
+        if(winner == ai){
+            score += 5;
+        }else {
+            score -= 5;
+        }
+    }
+
+    if(equals2(board[9][2], board[12][3]) && board[6][1] == ''){
+        winner = board[9][2];
+        if(winner == ai){
+            score += 5;
+        }else {
+            score -= 5;
+        }
+    }
+
+    //*fourth one
+    if(equals2(board[3][3], board[6][2]) && board[9][1] == ''){
+        winner = board[3][3];
+        if(winner == ai){
+            score += 5;
+        }else {
+            score -= 5;
+        }
+
+    }
+
+    if(equals2(board[6][2], board[9][1]) && board[3][3] =='' && board[12][0] == ''){
+        winner = board[6][2];
+        if(winner == ai){
+            score += 5;
+        }else {
+            score -= 5;
+        }
+    }
+
+    if(equals2(board[9][1], board[12][0]) && board[6][1] == ''){
+        winner = board[9][1];
+        if(winner == ai){
+            score += 5;
+        }else {
+            score -= 5;
+        }
+    }
+
+    //TODO:NOW THREE CELLS IN THE ROW!
 
 
-    return 1;
 }

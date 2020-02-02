@@ -76,7 +76,7 @@ function mousePressed(){
 }
 
 function equals2(a, b){
-    return (a== b && a != '');
+    return (a==b && a != '');
 }
 
 function equals3(a, b, c){
@@ -101,7 +101,7 @@ function checkWinner(){
         }
     }
 
-
+    //VERTICALL
     for(let i = 0; i < 16; i = i + 4){
         for(let j = 0; j < 4; j++){
             if(equals4(board[i][j], board[i + 1][j], board[i + 2][j], board[i + 3][j])){
@@ -122,7 +122,7 @@ function checkWinner(){
         }
     }
     
-    //3D vertical
+    //*3D vertical
     for(let i = 0; i < 4; i++){
         for(let j = 0; j < 4; j++){
             if(equals4(board[i][j], board[i + 4][j], board[i + 8][j], board[i + 12][j])){
@@ -132,7 +132,7 @@ function checkWinner(){
         }
     }
 
-    // // 3D DIAGONAL
+    //*3D DIAGONAL
     if(equals4(board[0][0], board[5][1], board[10][2], board[15][3])){
         winner = board[0][0];
         
