@@ -57,6 +57,8 @@ function setup(){
     textSize(32);
     w = width / 4;
     h = height / 16;
+    // bestMove();
+    nextTurn();
 }
 
 function mousePressed(){
@@ -66,10 +68,19 @@ function mousePressed(){
         if(board[j][i] ==''){
             board[j][i] = human;
             currentPlayer = ai;
+            // bestMove();
             nextTurn();
         }
     }
 
+}
+
+function equals2(a, b){
+    return (a== b && a != '');
+}
+
+function equals3(a, b, c){
+    return (a==b && b==c && a != '');
 }
 
 
